@@ -3,8 +3,95 @@
 <head>
 	<meta charset="UTF-8">
 	<title>index6</title>
+	<link rel="stylesheet" href="">
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 </head>
 <body>
-	分支第六次提交
+	<!-- <h1>freemarker内建函数</h1>
+	<h2>1.字符串内建函数</h2>
+	<ul>
+		<#list "a|b|c|d"?split("|") as item>
+			<li>${item}</li>
+		</#list>
+	
+		字符串转日期
+		[#assign var1="01/03/2017"?date("MM/dd/yyyy")]
+		[#assign var2="23:45:30"?time("HH:mm:ss")]
+		[#assign var2="2016-12-31 03:05 PM"?datetime("yyyy-MM-dd hh:mm")]
+		<li>${var1}</li>
+		<li>${var2}</li>
+		<li>${var3}</li>
+	</ul>
+	<h2>2.数字类型内建函数</h2>
+	<ul>
+		[#assign numVar1 = 314.46565/]
+		<li>${numVar1?string("0.##")}</li>
+		<li>${numVar1?round}</li>
+	</ul>
+	<h2>3.list内建函数</h2>
+	<ul>
+		[#assign listVar1 = [1,2,3,4,54,57,87,96]/]
+		<li>${listVar1?chunk(4)?size}</li>
+		<#list listVar1?chunk(4)?last as item>
+			<li>${item}</li>
+		</#list>
+	</ul>
+	<h2>4.其它内建函数</h2>
+	<ul>
+		[#assign sVar1 = 'hello'/]
+		<li>${sVar1?is_number?string('yes','no')}</li>
+		<li>${sVar1?has_content?string('yes','no')}</li>
+		<li>${sVar2!"ss"}</li>
+		<li>${("1+2")?eval}</li>
+		<li>${"1"+"2"?is_string?string('yes','no')}</li>
+	</ul> -->
+	<style>
+	body{
+		font-family: "微软雅黑";
+	}
+	.title{
+		width:1120px;
+		height:auto;
+		margin:0 auto;
+		font-size:24px;
+		text-align:center;
+	}
+	.title a{
+		display: block;
+	}
+	.title img{
+		width:200px;
+		height:200px;
+		display:block;
+		margin:0 auto;
+		cursor:pointer;
+	}
+	</style>
+	<div id="content"></div>
 </body>
+<script>
+(function() {
+
+	  var flickerAPI = "https://zhihu-daily.leanapp.cn/api/v1/last-stories";
+	  $.getJSON( flickerAPI, {
+	    
+		  }).done(function(data) {
+		      $.each(data.STORIES.stories,function(i,item){
+		      	$('<div class="title" id='+item.id+'>'+item.title+'<img class="img" src="'+item.images[0]+'"></img></div>').appendTo($('#content'));
+		      })
+		});
+
+  	$('#content').on('click','.title',function(){
+	  	var id=$(this).attr('id');
+	  	console.log(id);
+	  	$.getJSON("https://zhihu-daily.leanapp.cn/api/v1/contents/"+id+"").done(function(data){
+	  		console.log(data.CONTENTS);
+	  		$('<link rel="stylesheet" href="'+data.CONTENTS.css[0]+'"></link>').appendTo($('head'));
+	  		$('body')[0].innerHTML=data.CONTENTS.body;
+	  		// $('body').innerText=data.CONTENTS.body;
+	  		// console.log(data.CONTENTS.body);
+	  	})
+	  })
+})();
+</script>
 </html>
